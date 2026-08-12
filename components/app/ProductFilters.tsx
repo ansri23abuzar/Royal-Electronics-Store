@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import {
   BATTERY_OPTIONS,
   BRANDS,
@@ -52,20 +51,7 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
   const currentDisplay = searchParams.get("display") ?? "";
   const currentProcessor = searchParams.get("processor") ?? "";
   const currentSort = searchParams.get("sort") ?? "name";
-  const urlMinPrice = Number(searchParams.get("minPrice")) || 0;
-  const urlMaxPrice = Number(searchParams.get("maxPrice")) || 200000;
   const currentInStock = searchParams.get("inStock") === "true";
-
-  // Local state for price range (for smooth slider dragging)
-  const [priceRange, setPriceRange] = useState<[number, number]>([
-    urlMinPrice,
-    urlMaxPrice,
-  ]);
-
-  // Sync local state when URL changes
-  useEffect(() => {
-    setPriceRange([urlMinPrice, urlMaxPrice]);
-  }, [urlMinPrice, urlMaxPrice]);
 
   // Check which filters are active
   const isSearchActive = !!currentSearch;
@@ -96,14 +82,13 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
   const isMobileCategory = MOBILE_CATEGORY_SLUGS.includes(
     currentCategory.toLowerCase(),
   );
-  const isPriceActive = urlMinPrice > 0 || urlMaxPrice < 5000;
   const isInStockActive = currentInStock;
 
   const hasActiveFilters =
     isSearchActive ||
     isCategoryActive ||
-    isColorActive ||
-    isMaterialActive ||
+    (isMobileCategory && isColorActive) ||
+    (isMobileCategory && isMaterialActive) ||
     (isMobileCategory && isRamActive) ||
     (isMobileCategory && isStorageActive) ||
     (isMobileCategory && isBatteryActive) ||
@@ -113,15 +98,14 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
     (isMobileCategory && isBrandActive) ||
     (isMobileCategory && isDisplayActive) ||
     (isMobileCategory && isProcessorActive) ||
-    isPriceActive ||
     isInStockActive;
 
   // Count active filters
   const activeFilterCount = [
     isSearchActive,
     isCategoryActive,
-    isColorActive,
-    isMaterialActive,
+    isMobileCategory && isColorActive,
+    isMobileCategory && isMaterialActive,
     isMobileCategory && isRamActive,
     isMobileCategory && isStorageActive,
     isMobileCategory && isBatteryActive,
@@ -131,7 +115,6 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
     isMobileCategory && isBrandActive,
     isMobileCategory && isDisplayActive,
     isMobileCategory && isProcessorActive,
-    isPriceActive,
     isInStockActive,
   ].filter(Boolean).length;
 
@@ -164,11 +147,7 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
   };
 
   const clearSingleFilter = (key: string) => {
-    if (key === "price") {
-      updateParams({ minPrice: null, maxPrice: null });
-    } else {
-      updateParams({ [key]: null });
-    }
+    updateParams({ [key]: null });
   };
 
   // Helper to build labels for selected filters (used in mobile badge row)
@@ -178,8 +157,8 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
   ) => list?.find((i) => i.value === value)?.label ?? value;
 
   const selectedFilters: { key: string; label: string }[] = [];
-  if (isColorActive) selectedFilters.push({ key: "color", label: getLabel(COLORS, currentColor) });
-  if (isMaterialActive) selectedFilters.push({ key: "material", label: getLabel(MATERIALS, currentMaterial) });
+  if (isMobileCategory && isColorActive) selectedFilters.push({ key: "color", label: getLabel(COLORS, currentColor) });
+  if (isMobileCategory && isMaterialActive) selectedFilters.push({ key: "material", label: getLabel(MATERIALS, currentMaterial) });
   if (isMobileCategory && isRamActive) selectedFilters.push({ key: "ram", label: getLabel(RAM_OPTIONS, currentRam) });
   if (isMobileCategory && isStorageActive) selectedFilters.push({ key: "storage", label: getLabel(STORAGE_OPTIONS, currentStorage) });
   if (isMobileCategory && isBatteryActive) selectedFilters.push({ key: "battery", label: getLabel(BATTERY_OPTIONS, currentBattery) });
@@ -342,67 +321,71 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
         </Select>
       </div>
 
-      {/* Color */}
-      <div>
-        <FilterLabel isActive={isColorActive} filterKey="color">
-          Color
-        </FilterLabel>
-        <Select
-          value={currentColor || "all"}
-          onValueChange={(value) =>
-            updateParams({ color: value === "all" ? null : value })
-          }
-        >
-          <SelectTrigger
-            className={
-              isColorActive
-                ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
-                : ""
+      {/* Color (mobile-only) */}
+      {isMobileCategory && (
+        <div>
+          <FilterLabel isActive={isColorActive} filterKey="color">
+            Color
+          </FilterLabel>
+          <Select
+            value={currentColor || "all"}
+            onValueChange={(value) =>
+              updateParams({ color: value === "all" ? null : value })
             }
           >
-            <SelectValue placeholder="All Colors" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Colors</SelectItem>
-            {COLORS.map((color) => (
-              <SelectItem key={color.value} value={color.value}>
-                {color.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+            <SelectTrigger
+              className={
+                isColorActive
+                  ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                  : ""
+              }
+            >
+              <SelectValue placeholder="All Colors" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Colors</SelectItem>
+              {COLORS.map((color) => (
+                <SelectItem key={color.value} value={color.value}>
+                  {color.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
-      {/* Material */}
-      <div>
-        <FilterLabel isActive={isMaterialActive} filterKey="material">
-          Material
-        </FilterLabel>
-        <Select
-          value={currentMaterial || "all"}
-          onValueChange={(value) =>
-            updateParams({ material: value === "all" ? null : value })
-          }
-        >
-          <SelectTrigger
-            className={
-              isMaterialActive
-                ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
-                : ""
+      {/* Material (mobile-only) */}
+      {isMobileCategory && (
+        <div>
+          <FilterLabel isActive={isMaterialActive} filterKey="material">
+            Material
+          </FilterLabel>
+          <Select
+            value={currentMaterial || "all"}
+            onValueChange={(value) =>
+              updateParams({ material: value === "all" ? null : value })
             }
           >
-            <SelectValue placeholder="All Materials" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Materials</SelectItem>
-            {MATERIALS.map((material) => (
-              <SelectItem key={material.value} value={material.value}>
-                {material.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+            <SelectTrigger
+              className={
+                isMaterialActive
+                  ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                  : ""
+              }
+            >
+              <SelectValue placeholder="All Materials" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Materials</SelectItem>
+              {MATERIALS.map((material) => (
+                <SelectItem key={material.value} value={material.value}>
+                  {material.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       {isMobileCategory && (
         <>
@@ -686,32 +669,6 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
           </div>
         </>
       )}
-
-      {/* Price Range */}
-      <div>
-        <FilterLabel isActive={isPriceActive} filterKey="price">
-          Price Range: ₹{priceRange[0]} - ₹{priceRange[1]}
-        </FilterLabel>
-        <Slider
-          min={0}
-          max={5000}
-          step={100}
-          value={priceRange}
-          onValueChange={(value) => setPriceRange(value as [number, number])}
-          onValueCommitted={(value) => {
-            const [min, max] = value as [number, number];
-            updateParams({
-              minPrice: min > 0 ? min : null,
-              maxPrice: max < 5000 ? max : null,
-            });
-          }}
-          className={`mt-4 ${
-            isPriceActive
-              ? "[&_[role=slider]]:border-amber-500 [&_[role=slider]]:ring-amber-500"
-              : ""
-          }`}
-        />
-      </div>
 
       {/* In Stock Only */}
       <div>

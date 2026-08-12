@@ -11,6 +11,15 @@ const PRODUCT_FILTER_CONDITIONS = `
   && ($categorySlug == "" || category->slug.current == $categorySlug)
   && ($color == "" || color == $color)
   && ($material == "" || material == $material)
+  && ($ram == "" || ram == $ram)
+  && ($storage == "" || storage == $storage)
+  && ($battery == "" || battery == $battery)
+  && ($camera == "" || camera == $camera)
+  && ($network == "" || network == $network)
+  && ($os == "" || os == $os)
+  && ($brand == "" || brand == $brand)
+  && ($display == "" || display == $display)
+  && ($processor == "" || processor == $processor)
   && ($minPrice == 0 || price >= $minPrice)
   && ($maxPrice == 0 || price <= $maxPrice)
   && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")
@@ -37,6 +46,15 @@ const FILTERED_PRODUCT_PROJECTION = `{
   },
   material,
   color,
+  ram,
+  storage,
+  battery,
+  camera,
+  network,
+  os,
+  brand,
+  display,
+  processor,
   stock
 }`;
 

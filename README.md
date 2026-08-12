@@ -303,7 +303,7 @@ User Message ──► Clerk Auth Check ──► AI Agent (Claude)
 | `name` | string | Product name |
 | `slug` | slug | URL-friendly identifier |
 | `description` | text | Product description |
-| `price` | number | Price in GBP |
+| `price` | number | Price in INR |
 | `category` | reference → category | Product category |
 | `material` | string | wood, metal, fabric, leather, glass |
 | `color` | string | black, white, oak, walnut, grey, natural |
@@ -327,7 +327,7 @@ User Message ──► Clerk Auth Check ──► AI Agent (Claude)
 |-------|------|-------------|
 | `orderNumber` | string | Unique order ID |
 | `items` | array | Products with quantity & price at purchase |
-| `total` | number | Order total in GBP |
+| `total` | number | Order total in INR |
 | `status` | string | paid, shipped, delivered, cancelled |
 | `customer` | reference → customer | Link to customer |
 | `clerkUserId` | string | Clerk user identifier |

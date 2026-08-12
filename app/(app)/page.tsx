@@ -19,6 +19,15 @@ interface PageProps {
     category?: string;
     color?: string;
     material?: string;
+    ram?: string;
+    storage?: string;
+    battery?: string;
+    camera?: string;
+    network?: string;
+    os?: string;
+    brand?: string;
+    display?: string;
+    processor?: string;
     minPrice?: string;
     maxPrice?: string;
     sort?: string;
@@ -33,6 +42,15 @@ export default async function HomePage({ searchParams }: PageProps) {
   const categorySlug = params.category ?? "";
   const color = params.color ?? "";
   const material = params.material ?? "";
+  const ram = params.ram ?? "";
+  const storage = params.storage ?? "";
+  const battery = params.battery ?? "";
+  const camera = params.camera ?? "";
+  const network = params.network ?? "";
+  const os = params.os ?? "";
+  const brand = params.brand ?? "";
+  const display = params.display ?? "";
+  const processor = params.processor ?? "";
   const minPrice = Number(params.minPrice) || 0;
   const maxPrice = Number(params.maxPrice) || 0;
   const sort = params.sort ?? "name";
@@ -65,6 +83,15 @@ export default async function HomePage({ searchParams }: PageProps) {
       categorySlug,
       color,
       material,
+      ram,
+      storage,
+      battery,
+      camera,
+      network,
+      os,
+      brand,
+      display,
+      processor,
       minPrice,
       maxPrice,
       inStock,
@@ -97,7 +124,7 @@ export default async function HomePage({ searchParams }: PageProps) {
             Shop {categorySlug ? categorySlug : "All Products"}
           </h1>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Premium furniture for your home
+            Browse premium electronics, smartphones, and accessories.
           </p>
         </div>
 

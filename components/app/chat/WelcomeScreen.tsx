@@ -1,14 +1,14 @@
 import { Package, Search, Sparkles } from "lucide-react";
 
 interface WelcomeScreenProps {
-  onSuggestionClick: (message: { text: string }) => void;
+  onSuggestionClick: (text: string) => void;
   isSignedIn: boolean;
 }
 
 const productSuggestions = [
-  "Show me oak tables",
-  "Leather sofas under £1000",
-  "What chairs do you have?",
+  "Find smartphones under ₹50000",
+  "Show me headphones under ₹5000",
+  "Find a speaker under ₹1000",
 ];
 
 const orderSuggestions = [
@@ -31,8 +31,8 @@ export function WelcomeScreen({
       </h3>
       <p className="mt-2 max-w-xs text-sm text-zinc-500 dark:text-zinc-400">
         {isSignedIn
-          ? "I can help you find furniture, check your orders, and track deliveries."
-          : "I can help you find furniture by style, material, color, or price. Just ask!"}
+          ? "I can help you find electronic goods, check your orders, and track deliveries."
+          : "I can help you find electronic products, or price. Just ask!"}
       </p>
 
       {/* Product suggestions */}
@@ -46,7 +46,7 @@ export function WelcomeScreen({
             <button
               key={suggestion}
               type="button"
-              onClick={() => onSuggestionClick({ text: suggestion })}
+              onClick={() => onSuggestionClick(suggestion)}
               className="rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-700 transition-colors hover:border-amber-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:border-amber-600 dark:hover:bg-zinc-700"
             >
               {suggestion}
@@ -67,7 +67,7 @@ export function WelcomeScreen({
               <button
                 key={suggestion}
                 type="button"
-                onClick={() => onSuggestionClick({ text: suggestion })}
+                onClick={() => onSuggestionClick(suggestion)}
                 className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm text-amber-700 transition-colors hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300 dark:hover:bg-amber-900/40"
               >
                 {suggestion}

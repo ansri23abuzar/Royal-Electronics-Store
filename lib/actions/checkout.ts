@@ -107,7 +107,7 @@ export async function createCheckoutSession(
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
       validatedItems.map(({ product, quantity }) => ({
         price_data: {
-          currency: "gbp",
+          currency: "inr",
           product_data: {
             name: product.name ?? "Product",
             images: product.image?.asset?.url ? [product.image.asset.url] : [],
@@ -115,7 +115,7 @@ export async function createCheckoutSession(
               productId: product._id,
             },
           },
-          unit_amount: Math.round((product.price ?? 0) * 100), // Convert to pence
+          unit_amount: Math.round((product.price ?? 0) * 100), // Convert to paise
         },
         quantity,
       }));

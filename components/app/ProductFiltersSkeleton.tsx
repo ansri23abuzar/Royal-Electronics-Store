@@ -30,12 +30,6 @@ export function ProductFiltersSkeleton() {
         <Skeleton className="h-10 w-full" />
       </div>
 
-      {/* Price Range */}
-      <div>
-        <Skeleton className="mb-2 h-4 w-32" />
-        <Skeleton className="mt-4 h-2 w-full" />
-      </div>
-
       {/* Sort */}
       <div>
         <Skeleton className="mb-2 h-4 w-14" />

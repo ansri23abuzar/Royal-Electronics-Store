@@ -3,7 +3,7 @@ import { getCheckoutSession } from "@/lib/actions/checkout";
 import { SuccessClient } from "./SuccessClient";
 
 export const metadata = {
-  title: "Order Confirmed | Furniture Shop",
+  title: "Order Confirmed | Electronics Shop",
   description: "Your order has been placed successfully",
 };
 

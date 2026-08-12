@@ -118,7 +118,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <CardContent className="flex flex-1 flex-col p-5">
         <div className="flex items-center justify-between gap-2">
           <span className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            {product.material ?? "Furniture"}
+            {product.material ?? "Electronics Products"}
           </span>
           <StockBadge productId={product._id} stock={stock} />
         </div>

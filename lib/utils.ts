@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatPrice(
   amount: number | null | undefined,
-  currency = "£",
+  currency = "₹",
 ): string {
   return `${currency}${(amount ?? 0).toFixed(2)}`;
 }

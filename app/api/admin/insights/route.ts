@@ -212,10 +212,10 @@ export async function GET() {
     // Build fallback insights in case AI is not configured or fails
     const fallbackInsights = {
       salesTrends: {
-        summary: `Revenue this week: £${currentRevenue.toFixed(2)} (${revenueChange > 0 ? "+" : ""}${revenueChange.toFixed(1)}% vs last week)`,
+        summary: `Revenue this week: ₹${currentRevenue.toFixed(2)} (${revenueChange > 0 ? "+" : ""}${revenueChange.toFixed(1)}% vs last week)`,
         highlights: [
           `${revenuePeriod.currentOrderCount || 0} orders this week`,
-          `Average order value: £${avgOrderValue.toFixed(2)}`,
+          `Average order value: ₹${avgOrderValue.toFixed(2)}`,
           topProducts[0]
             ? `Top seller: ${topProducts[0].name}`
             : "No sales data yet",
@@ -275,7 +275,7 @@ Guidelines:
 - Prioritize actionable insights
 - Keep highlights, alerts, and recommendations concise (under 100 characters each)
 - Focus on what the admin can do TODAY
-- Use £ for currency`,
+- Use ₹ for currency`,
         prompt: `Analyze this e-commerce store data and provide insights:
 
 ${JSON.stringify(dataSummary, null, 2)}

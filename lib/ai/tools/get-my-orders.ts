@@ -94,11 +94,11 @@ export function createGetMyOrdersTool(userId: string | null) {
           statusDisplay: getOrderStatusEmoji(order.status),
           itemCount: order.itemCount ?? 0,
           itemNames: (order.itemNames ?? []).filter(
-            (name): name is string => name !== null,
-          ),
+            (name) => name !== null,
+          ) as string[],
           itemImages: (order.itemImages ?? []).filter(
-            (url): url is string => url !== null,
-          ),
+            (url) => url !== null,
+          ) as string[],
           createdAt: order.createdAt,
           orderUrl: `/orders/${order._id}`,
         }));

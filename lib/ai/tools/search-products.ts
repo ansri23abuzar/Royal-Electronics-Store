@@ -37,17 +37,17 @@ const productSearchSchema = z.object({
     .number()
     .optional()
     .default(0)
-    .describe("Minimum price in GBP (e.g., 100)"),
+    .describe("Minimum price in INR (e.g., 1000)"),
   maxPrice: z
     .number()
     .optional()
     .default(0)
-    .describe("Maximum price in GBP (e.g., 500). Use 0 for no maximum."),
+    .describe("Maximum price in INR (e.g., 5000). Use 0 for no maximum."),
 });
 
 export const searchProductsTool = tool({
   description:
-    "Search for products in the furniture store. Can search by name, description, or category, and filter by material, color, and price range. Returns product details including stock availability.",
+    "Search for products in the mobile store. Can search by name, description, or category, and filter by material, color, and other specifications. Returns product details including stock availability.",
   inputSchema: productSearchSchema,
   execute: async ({ query, category, material, color, minPrice, maxPrice }) => {
     console.log("[SearchProducts] Query received:", {

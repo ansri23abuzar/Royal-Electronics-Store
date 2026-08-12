@@ -5,8 +5,10 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
 import {
   Carousel,
   type CarouselApi,
@@ -15,6 +17,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+
 import { cn, formatPrice } from "@/lib/utils";
 import type { FEATURED_PRODUCTS_QUERY_RESULT } from "@/sanity.types";
 
@@ -24,7 +27,9 @@ interface FeaturedCarouselProps {
   products: FEATURED_PRODUCTS_QUERY_RESULT;
 }
 
-export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
+export function FeaturedCarousel({
+  products,
+}: FeaturedCarouselProps) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -35,9 +40,15 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
     setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap());
 
-    api.on("select", () => {
+    const handleSelect = () => {
       setCurrent(api.selectedScrollSnap());
-    });
+    };
+
+    api.on("select", handleSelect);
+
+    return () => {
+      api.off("select", handleSelect);
+    };
   }, [api]);
 
   const scrollTo = useCallback(
@@ -52,7 +63,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
   }
 
   return (
-    <div className="relative w-full bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
+    <section className="relative w-full overflow-hidden bg-zinc-950">
       <Carousel
         setApi={setApi}
         opts={{
@@ -66,41 +77,83 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
             stopOnMouseEnter: true,
           }),
         ]}
-        className="w-full"
+        className="relative w-full"
       >
-        <CarouselContent className="-ml-0">
+        <CarouselContent className="ml-0">
           {products.map((product) => (
-            <CarouselItem key={product._id} className="pl-0">
+            <CarouselItem
+              key={product._id}
+              className="basis-full pl-0"
+            >
               <FeaturedSlide product={product} />
             </CarouselItem>
           ))}
         </CarouselContent>
 
-        {/* Navigation arrows - positioned inside */}
-        <CarouselPrevious className="left-4 border-zinc-700 bg-zinc-800/80 text-white hover:bg-zinc-700 hover:text-white sm:left-8" />
-        <CarouselNext className="right-4 border-zinc-700 bg-zinc-800/80 text-white hover:bg-zinc-700 hover:text-white sm:right-8" />
-      </Carousel>
+        {/* Previous Arrow */}
+        <CarouselPrevious
+          className="
+            left-4
+            z-30
+            border-zinc-600
+            bg-zinc-900/80
+            text-white
+            backdrop-blur-sm
+            hover:bg-zinc-800
+            hover:text-white
+            sm:left-6
+            md:left-8
+          "
+        />
 
-      {/* Dot indicators */}
-      {count > 1 && (
-        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2 sm:bottom-6">
-          {Array.from({ length: count }).map((_, index) => (
-            <button
-              key={`dot-${index}`}
-              type="button"
-              onClick={() => scrollTo(index)}
-              className={cn(
-                "h-2 w-2 rounded-full transition-all duration-300",
-                current === index
-                  ? "w-6 bg-white"
-                  : "bg-white/40 hover:bg-white/60",
-              )}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+        {/* Next Arrow */}
+        <CarouselNext
+          className="
+            right-4
+            z-30
+            border-zinc-600
+            bg-zinc-900/80
+            text-white
+            backdrop-blur-sm
+            hover:bg-zinc-800
+            hover:text-white
+            sm:right-6
+            md:right-8
+          "
+        />
+
+        {/* Dot Indicators */}
+        {count > 1 && (
+          <div
+            className="
+              absolute
+              bottom-4
+              left-1/2
+              z-30
+              flex
+              -translate-x-1/2
+              items-center
+              gap-2
+            "
+          >
+            {Array.from({ length: count }).map((_, index) => (
+              <button
+                key={`dot-${index}`}
+                type="button"
+                onClick={() => scrollTo(index)}
+                aria-label={`Go to slide ${index + 1}`}
+                className={cn(
+                  "h-2 rounded-full transition-all duration-300",
+                  current === index
+                    ? "w-6 bg-white"
+                    : "w-2 bg-white/40 hover:bg-white/70",
+                )}
+              />
+            ))}
+          </div>
+        )}
+      </Carousel>
+    </section>
   );
 }
 
@@ -108,63 +161,180 @@ interface FeaturedSlideProps {
   product: FeaturedProduct;
 }
 
-function FeaturedSlide({ product }: FeaturedSlideProps) {
+function FeaturedSlide({
+  product,
+}: FeaturedSlideProps) {
   const mainImage = product.images?.[0]?.asset?.url;
 
   return (
-    <div className="flex min-h-[400px] flex-col md:min-h-[450px] md:flex-row lg:min-h-[500px]">
-      {/* Image Section - Left side (60% on desktop) */}
-      <div className="relative h-64 w-full md:h-auto md:w-3/5">
+    <div
+      className="
+        flex
+        h-[420px]
+        w-full
+        flex-col
+        overflow-hidden
+        bg-gradient-to-br
+        from-zinc-900
+        via-zinc-850
+        to-zinc-950
+        md:h-[500px]
+        md:flex-row
+      "
+    >
+      {/* =========================
+          IMAGE
+          ========================= */}
+      <div
+        className="
+          relative
+          h-[230px]
+          w-full
+          overflow-hidden
+          bg-zinc-100
+          md:h-full
+          md:w-3/5
+        "
+      >
         {mainImage ? (
           <Image
             src={mainImage}
             alt={product.name ?? "Featured product"}
             fill
-            className="object-cover"
             sizes="(max-width: 768px) 100vw, 60vw"
-            priority
+            className="object-contain object-center"
           />
         ) : (
           <div className="flex h-full items-center justify-center bg-zinc-800">
-            <span className="text-zinc-500">No image</span>
+            <span className="text-zinc-500">
+              No image available
+            </span>
           </div>
         )}
 
-        {/* Gradient overlay for image edge blending */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-zinc-900/90 dark:to-zinc-950/90 hidden md:block" />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/90 via-transparent to-transparent md:hidden" />
+        {/* Image → Content gradient */}
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-y-0
+            right-0
+            hidden
+            w-1/4
+            bg-gradient-to-r
+            from-transparent
+            to-zinc-900
+            md:block
+          "
+        />
+
+        {/* Mobile gradient */}
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-x-0
+            bottom-0
+            h-24
+            bg-gradient-to-t
+            from-zinc-950
+            to-transparent
+            md:hidden
+          "
+        />
       </div>
 
-      {/* Content Section - Right side (40% on desktop) */}
-      <div className="flex w-full flex-col justify-center px-6 py-8 md:w-2/5 md:px-10 lg:px-16">
+      {/* =========================
+          PRODUCT DETAILS
+          ========================= */}
+      <div
+        className="
+          flex
+          w-full
+          flex-1
+          flex-col
+          justify-center
+          px-6
+          py-6
+          md:w-2/5
+          md:px-8
+          md:py-8
+          lg:px-12
+          xl:px-16
+        "
+      >
+        {/* Category */}
         {product.category && (
           <Badge
             variant="secondary"
-            className="mb-4 w-fit bg-amber-500/20 text-amber-400 hover:bg-amber-500/30"
+            className="
+              mb-3
+              w-fit
+              border-0
+              bg-amber-500/20
+              text-amber-400
+              hover:bg-amber-500/30
+            "
           >
             {product.category.title}
           </Badge>
         )}
 
-        <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
+        {/* Product Name */}
+        <h2
+          className="
+            text-2xl
+            font-bold
+            leading-tight
+            tracking-tight
+            text-white
+            sm:text-3xl
+            lg:text-4xl
+          "
+        >
           {product.name}
         </h2>
 
+        {/* Description */}
         {product.description && (
-          <p className="mt-4 line-clamp-3 text-sm text-zinc-300 sm:text-base lg:text-lg">
+          <p
+            className="
+              mt-3
+              line-clamp-3
+              text-sm
+              leading-6
+              text-zinc-300
+              sm:text-base
+            "
+          >
             {product.description}
           </p>
         )}
 
-        <p className="mt-6 text-3xl font-bold text-white lg:text-4xl">
+        {/* Price */}
+        <p
+          className="
+            mt-5
+            text-3xl
+            font-bold
+            tracking-tight
+            text-white
+            lg:text-4xl
+          "
+        >
           {formatPrice(product.price)}
         </p>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        {/* Shop Button */}
+        <div className="mt-5">
           <Button
             asChild
             size="lg"
-            className="bg-white text-zinc-900 hover:bg-zinc-100"
+            className="
+              bg-white
+              text-zinc-900
+              hover:bg-zinc-100
+            "
           >
             <Link href={`/products/${product.slug}`}>
               Shop Now

@@ -10,7 +10,7 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { ORDERS_BY_USER_QUERY } from "@/sanity/queries/orders";
 
 export const metadata = {
-  title: "Your Orders | Furniture Shop",
+  title: "Your Orders | Electronics Shop",
   description: "View your order history",
 };
 
@@ -52,8 +52,8 @@ export default async function OrdersPage() {
           const status = getOrderStatus(order.status);
           const StatusIcon = status.icon;
           const images = (order.itemImages ?? []).filter(
-            (url): url is string => url !== null,
-          );
+            (url) => url !== null,
+          ) as string[];
 
           return (
             <Link
