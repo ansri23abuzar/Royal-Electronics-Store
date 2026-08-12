@@ -1,6 +1,6 @@
-# E-Commerce AI Store — UDP Web Development Batch 2026
+# Royal Electronics Store — UDP Web Development Batch 2026
 
-> A modern AI-powered e-commerce platform built during the UDP Web Development Training & Internship Program. Interns can clone, fork, and build upon this project as they learn full-stack development with cutting-edge technologies.
+> A modern AI-powered electronics platform built during the UDP Web Development Training & Internship Program. Interns can clone, fork, and build upon this project as they learn full-stack development with cutting-edge technologies.
 
 <div align="center">
 
@@ -305,8 +305,8 @@ User Message ──► Clerk Auth Check ──► AI Agent (Claude)
 | `description` | text | Product description |
 | `price` | number | Price in INR |
 | `category` | reference → category | Product category |
-| `material` | string | wood, metal, fabric, leather, glass |
-| `color` | string | black, white, oak, walnut, grey, natural |
+| `material` | string | aluminum, plastic, vegan leather, composite back, glass |
+| `color` | string | black, white, blur, red, grey, golden |
 | `dimensions` | string | e.g., "120cm x 80cm x 75cm" |
 | `images` | array of image | Product images (hotspot enabled) |
 | `stock` | number | Current inventory count |
