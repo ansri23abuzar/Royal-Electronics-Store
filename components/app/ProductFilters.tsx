@@ -14,7 +14,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { COLORS, MATERIALS, SORT_OPTIONS } from "@/lib/constants/filters";
+import {
+  BATTERY_OPTIONS,
+  BRANDS,
+  CAMERA_OPTIONS,
+  COLORS,
+  DISPLAY_OPTIONS,
+  MATERIALS,
+  NETWORK_OPTIONS,
+  OS_OPTIONS,
+  PROCESSOR_OPTIONS,
+  RAM_OPTIONS,
+  SORT_OPTIONS,
+  STORAGE_OPTIONS,
+} from "@/lib/constants/filters";
 import type { ALL_CATEGORIES_QUERY_RESULT } from "@/sanity.types";
 
 interface ProductFiltersProps {
@@ -29,9 +42,18 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
   const currentCategory = searchParams.get("category") ?? "";
   const currentColor = searchParams.get("color") ?? "";
   const currentMaterial = searchParams.get("material") ?? "";
+  const currentRam = searchParams.get("ram") ?? "";
+  const currentStorage = searchParams.get("storage") ?? "";
+  const currentBattery = searchParams.get("battery") ?? "";
+  const currentCamera = searchParams.get("camera") ?? "";
+  const currentNetwork = searchParams.get("network") ?? "";
+  const currentOs = searchParams.get("os") ?? "";
+  const currentBrand = searchParams.get("brand") ?? "";
+  const currentDisplay = searchParams.get("display") ?? "";
+  const currentProcessor = searchParams.get("processor") ?? "";
   const currentSort = searchParams.get("sort") ?? "name";
   const urlMinPrice = Number(searchParams.get("minPrice")) || 0;
-  const urlMaxPrice = Number(searchParams.get("maxPrice")) || 5000;
+  const urlMaxPrice = Number(searchParams.get("maxPrice")) || 200000;
   const currentInStock = searchParams.get("inStock") === "true";
 
   // Local state for price range (for smooth slider dragging)
@@ -50,6 +72,30 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
   const isCategoryActive = !!currentCategory;
   const isColorActive = !!currentColor;
   const isMaterialActive = !!currentMaterial;
+  const isRamActive = !!currentRam;
+  const isStorageActive = !!currentStorage;
+  const isBatteryActive = !!currentBattery;
+  const isCameraActive = !!currentCamera;
+  const isNetworkActive = !!currentNetwork;
+  const isOsActive = !!currentOs;
+  const isBrandActive = !!currentBrand;
+  const isDisplayActive = !!currentDisplay;
+  const isProcessorActive = !!currentProcessor;
+  const MOBILE_CATEGORY_SLUGS = [
+    "mobile",
+    "mobiles",
+    "smartphone",
+    "smartphones",
+    "phone",
+    "phones",
+    "cellphone",
+    "cellphones",
+    "cell-phone",
+    "cell-phones",
+  ];
+  const isMobileCategory = MOBILE_CATEGORY_SLUGS.includes(
+    currentCategory.toLowerCase(),
+  );
   const isPriceActive = urlMinPrice > 0 || urlMaxPrice < 5000;
   const isInStockActive = currentInStock;
 
@@ -58,6 +104,15 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
     isCategoryActive ||
     isColorActive ||
     isMaterialActive ||
+    (isMobileCategory && isRamActive) ||
+    (isMobileCategory && isStorageActive) ||
+    (isMobileCategory && isBatteryActive) ||
+    (isMobileCategory && isCameraActive) ||
+    (isMobileCategory && isNetworkActive) ||
+    (isMobileCategory && isOsActive) ||
+    (isMobileCategory && isBrandActive) ||
+    (isMobileCategory && isDisplayActive) ||
+    (isMobileCategory && isProcessorActive) ||
     isPriceActive ||
     isInStockActive;
 
@@ -67,6 +122,15 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
     isCategoryActive,
     isColorActive,
     isMaterialActive,
+    isMobileCategory && isRamActive,
+    isMobileCategory && isStorageActive,
+    isMobileCategory && isBatteryActive,
+    isMobileCategory && isCameraActive,
+    isMobileCategory && isNetworkActive,
+    isMobileCategory && isOsActive,
+    isMobileCategory && isBrandActive,
+    isMobileCategory && isDisplayActive,
+    isMobileCategory && isProcessorActive,
     isPriceActive,
     isInStockActive,
   ].filter(Boolean).length;
@@ -106,6 +170,25 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
       updateParams({ [key]: null });
     }
   };
+
+  // Helper to build labels for selected filters (used in mobile badge row)
+  const getLabel = (
+    list: { label: string; value: string }[] | undefined,
+    value: string,
+  ) => list?.find((i) => i.value === value)?.label ?? value;
+
+  const selectedFilters: { key: string; label: string }[] = [];
+  if (isColorActive) selectedFilters.push({ key: "color", label: getLabel(COLORS, currentColor) });
+  if (isMaterialActive) selectedFilters.push({ key: "material", label: getLabel(MATERIALS, currentMaterial) });
+  if (isMobileCategory && isRamActive) selectedFilters.push({ key: "ram", label: getLabel(RAM_OPTIONS, currentRam) });
+  if (isMobileCategory && isStorageActive) selectedFilters.push({ key: "storage", label: getLabel(STORAGE_OPTIONS, currentStorage) });
+  if (isMobileCategory && isBatteryActive) selectedFilters.push({ key: "battery", label: getLabel(BATTERY_OPTIONS, currentBattery) });
+  if (isMobileCategory && isCameraActive) selectedFilters.push({ key: "camera", label: getLabel(CAMERA_OPTIONS, currentCamera) });
+  if (isMobileCategory && isNetworkActive) selectedFilters.push({ key: "network", label: getLabel(NETWORK_OPTIONS, currentNetwork) });
+  if (isMobileCategory && isOsActive) selectedFilters.push({ key: "os", label: getLabel(OS_OPTIONS, currentOs) });
+  if (isMobileCategory && isBrandActive) selectedFilters.push({ key: "brand", label: getLabel(BRANDS, currentBrand) });
+  if (isMobileCategory && isDisplayActive) selectedFilters.push({ key: "display", label: getLabel(DISPLAY_OPTIONS, currentDisplay) });
+  if (isMobileCategory && isProcessorActive) selectedFilters.push({ key: "processor", label: getLabel(PROCESSOR_OPTIONS, currentProcessor) });
 
   // Helper for filter label with active indicator
   const FilterLabel = ({
@@ -164,6 +247,24 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
             <X className="mr-2 h-4 w-4" />
             Clear All Filters
           </Button>
+          {/* Mobile: show selected filters as clearable badges */}
+          {selectedFilters.length > 0 && (
+            <div className="mt-2 sm:hidden flex flex-wrap gap-2">
+              {selectedFilters.map((f) => (
+                <button
+                  key={f.key}
+                  type="button"
+                  onClick={() => clearSingleFilter(f.key)}
+                  className="inline-flex items-center"
+                >
+                  <Badge className="h-6 bg-amber-100 text-amber-800 px-2 dark:bg-amber-900 dark:text-amber-200">
+                    {f.label}
+                    <X className="ml-2 h-3 w-3" />
+                  </Badge>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -196,9 +297,30 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
         </FilterLabel>
         <Select
           value={currentCategory || "all"}
-          onValueChange={(value) =>
-            updateParams({ category: value === "all" ? null : value })
-          }
+          onValueChange={(value) => {
+            const selectedCategory = value === "all" ? null : value;
+            const isSelectedMobile =
+              !!selectedCategory &&
+              MOBILE_CATEGORY_SLUGS.includes(selectedCategory.toLowerCase());
+
+            const updates: Record<string, string | number | null> = {
+              category: selectedCategory,
+            };
+
+            if (!isSelectedMobile) {
+              updates.ram = null;
+              updates.storage = null;
+              updates.battery = null;
+              updates.camera = null;
+              updates.network = null;
+              updates.os = null;
+              updates.brand = null;
+              updates.display = null;
+              updates.processor = null;
+            }
+
+            updateParams(updates);
+          }}
         >
           <SelectTrigger
             className={
@@ -282,10 +404,293 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
         </Select>
       </div>
 
+      {isMobileCategory && (
+        <>
+          {/* RAM */}
+          <div>
+            <FilterLabel isActive={isRamActive} filterKey="ram">
+              RAM
+            </FilterLabel>
+            <Select
+              value={currentRam || "all"}
+              onValueChange={(value) =>
+                updateParams({ ram: value === "all" ? null : value })
+              }
+            >
+              <SelectTrigger
+                className={
+                  isRamActive
+                    ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                    : ""
+                }
+              >
+                <SelectValue placeholder="All RAM" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All RAM</SelectItem>
+                {RAM_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Storage */}
+          <div>
+            <FilterLabel isActive={isStorageActive} filterKey="storage">
+              Storage
+            </FilterLabel>
+            <Select
+              value={currentStorage || "all"}
+              onValueChange={(value) =>
+                updateParams({ storage: value === "all" ? null : value })
+              }
+            >
+              <SelectTrigger
+                className={
+                  isStorageActive
+                    ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                    : ""
+                }
+              >
+                <SelectValue placeholder="All Storage" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Storage</SelectItem>
+                {STORAGE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Battery */}
+          <div>
+            <FilterLabel isActive={isBatteryActive} filterKey="battery">
+              Battery
+            </FilterLabel>
+            <Select
+              value={currentBattery || "all"}
+              onValueChange={(value) =>
+                updateParams({ battery: value === "all" ? null : value })
+              }
+            >
+              <SelectTrigger
+                className={
+                  isBatteryActive
+                    ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                    : ""
+                }
+              >
+                <SelectValue placeholder="All Battery" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Battery</SelectItem>
+                {BATTERY_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Camera */}
+          <div>
+            <FilterLabel isActive={isCameraActive} filterKey="camera">
+              Camera
+            </FilterLabel>
+            <Select
+              value={currentCamera || "all"}
+              onValueChange={(value) =>
+                updateParams({ camera: value === "all" ? null : value })
+              }
+            >
+              <SelectTrigger
+                className={
+                  isCameraActive
+                    ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                    : ""
+                }
+              >
+                <SelectValue placeholder="All Cameras" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Cameras</SelectItem>
+                {CAMERA_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Network */}
+          <div>
+            <FilterLabel isActive={isNetworkActive} filterKey="network">
+              Network
+            </FilterLabel>
+            <Select
+              value={currentNetwork || "all"}
+              onValueChange={(value) =>
+                updateParams({ network: value === "all" ? null : value })
+              }
+            >
+              <SelectTrigger
+                className={
+                  isNetworkActive
+                    ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                    : ""
+                }
+              >
+                <SelectValue placeholder="All Networks" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Networks</SelectItem>
+                {NETWORK_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* OS */}
+          <div>
+            <FilterLabel isActive={isOsActive} filterKey="os">
+              OS
+            </FilterLabel>
+            <Select
+              value={currentOs || "all"}
+              onValueChange={(value) =>
+                updateParams({ os: value === "all" ? null : value })
+              }
+            >
+              <SelectTrigger
+                className={
+                  isOsActive
+                    ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                    : ""
+                }
+              >
+                <SelectValue placeholder="All OS" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All OS</SelectItem>
+                {OS_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Brand */}
+          <div>
+            <FilterLabel isActive={isBrandActive} filterKey="brand">
+              Brand
+            </FilterLabel>
+            <Select
+              value={currentBrand || "all"}
+              onValueChange={(value) =>
+                updateParams({ brand: value === "all" ? null : value })
+              }
+            >
+              <SelectTrigger
+                className={
+                  isBrandActive
+                    ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                    : ""
+                }
+              >
+                <SelectValue placeholder="All Brands" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Brands</SelectItem>
+                {BRANDS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Display */}
+          <div>
+            <FilterLabel isActive={isDisplayActive} filterKey="display">
+              Display
+            </FilterLabel>
+            <Select
+              value={currentDisplay || "all"}
+              onValueChange={(value) =>
+                updateParams({ display: value === "all" ? null : value })
+              }
+            >
+              <SelectTrigger
+                className={
+                  isDisplayActive
+                    ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                    : ""
+                }
+              >
+                <SelectValue placeholder="All Displays" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Displays</SelectItem>
+                {DISPLAY_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Processor */}
+          <div>
+            <FilterLabel isActive={isProcessorActive} filterKey="processor">
+              Processor
+            </FilterLabel>
+            <Select
+              value={currentProcessor || "all"}
+              onValueChange={(value) =>
+                updateParams({ processor: value === "all" ? null : value })
+              }
+            >
+              <SelectTrigger
+                className={
+                  isProcessorActive
+                    ? "border-amber-500 ring-1 ring-amber-500 dark:border-amber-400 dark:ring-amber-400"
+                    : ""
+                }
+              >
+                <SelectValue placeholder="All Processors" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Processors</SelectItem>
+                {PROCESSOR_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </>
+      )}
+
       {/* Price Range */}
       <div>
         <FilterLabel isActive={isPriceActive} filterKey="price">
-          Price Range: £{priceRange[0]} - £{priceRange[1]}
+          Price Range: ₹{priceRange[0]} - ₹{priceRange[1]}
         </FilterLabel>
         <Slider
           min={0}

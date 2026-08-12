@@ -1,8 +1,17 @@
 import { PackageIcon } from "@sanity/icons/Package";
 import { defineField, defineType } from "sanity";
 import {
+  BATTERY_SANITY_LIST,
+  BRANDS_SANITY_LIST,
+  CAMERA_SANITY_LIST,
   COLORS_SANITY_LIST,
+  DISPLAY_SANITY_LIST,
   MATERIALS_SANITY_LIST,
+  NETWORK_SANITY_LIST,
+  OS_SANITY_LIST,
+  PROCESSOR_SANITY_LIST,
+  RAM_SANITY_LIST,
+  STORAGE_SANITY_LIST,
 } from "@/lib/constants/filters";
 
 export const productType = defineType({
@@ -45,7 +54,7 @@ export const productType = defineType({
       name: "price",
       type: "number",
       group: "details",
-      description: "Price in GBP (e.g., 599.99)",
+      description: "Price in INR (e.g., 5999.99)",
       validation: (rule) => [
         rule.required().error("Price is required"),
         rule.positive().error("Price must be a positive number"),
@@ -73,6 +82,96 @@ export const productType = defineType({
       group: "details",
       options: {
         list: COLORS_SANITY_LIST,
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "ram",
+      type: "string",
+      group: "details",
+      title: "RAM",
+      options: {
+        list: RAM_SANITY_LIST,
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "storage",
+      type: "string",
+      group: "details",
+      title: "Storage",
+      options: {
+        list: STORAGE_SANITY_LIST,
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "battery",
+      type: "string",
+      group: "details",
+      title: "Battery",
+      options: {
+        list: BATTERY_SANITY_LIST,
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "camera",
+      type: "string",
+      group: "details",
+      title: "Camera",
+      options: {
+        list: CAMERA_SANITY_LIST,
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "network",
+      type: "string",
+      group: "details",
+      title: "Network",
+      options: {
+        list: NETWORK_SANITY_LIST,
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "os",
+      type: "string",
+      group: "details",
+      title: "OS",
+      options: {
+        list: OS_SANITY_LIST,
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "brand",
+      type: "string",
+      group: "details",
+      title: "Brand",
+      options: {
+        list: BRANDS_SANITY_LIST,
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "display",
+      type: "string",
+      group: "details",
+      title: "Display",
+      options: {
+        list: DISPLAY_SANITY_LIST,
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "processor",
+      type: "string",
+      group: "details",
+      title: "Processor",
+      options: {
+        list: PROCESSOR_SANITY_LIST,
         layout: "radio",
       },
     }),
@@ -134,7 +233,7 @@ export const productType = defineType({
     prepare({ title, subtitle, media, price }) {
       return {
         title,
-        subtitle: `${subtitle ? `${subtitle} • ` : ""}£${price ?? 0}`,
+        subtitle: `${subtitle ? `${subtitle} • ` : ""}₹${price ?? 0}`,
         media,
       };
     },
