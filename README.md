@@ -427,12 +427,6 @@ npm install
 
 ---
 
-## License
-
-This project is for educational purposes as part of the **UDP Web Development Training & Internship Program 2026**.
-
----
-
 ## 📚 My Learning Journey
 
 This project is the result of my learning journey during the **Ujjwalit Development Programme Summer Internship**, guided by **Daksh Sir**.
@@ -491,6 +485,12 @@ The regular classes, practical implementation, and guidance from **Daksh Sir** h
 A special thanks to **Daksh Sir** and the **Ujjwalit Development Programme** for the guidance, lessons, and learning experience throughout the internship.
 
 **Thank you for being a part of my development journey.** 🚀
+
+---
+
+## License
+
+This project is for educational purposes as part of the **UDP Web Development Training & Internship Program 2026**.
 
 ---
 
