@@ -433,6 +433,66 @@ This project is for educational purposes as part of the **UDP Web Development Tr
 
 ---
 
+## 📚 My Learning Journey
+
+This project is the result of my learning journey during the **Ujjwalit Development Programme Summer Internship**, guided by **Daksh Sir**.
+
+Throughout the internship, we had classes **twice a week, mostly on weekends**, where we learned modern web development technologies and gradually applied them by building practical projects.
+
+### 🌱 What I Learned
+
+During the programme, I explored and worked with:
+
+* ⚡ **Next.js** — Understanding the Next.js environment, project structure, routing, and modern web application development.
+* 🔐 **Clerk** — Implementing authentication and authorization for web applications.
+* 🗄️ **Sanity.io** — Learning how to manage and query structured content for applications.
+* 🎨 **Shadcn/ui** — Building modern, reusable, and responsive UI components.
+* 🚀 **Vercel** — Learning about deployment and hosting Next.js applications.
+* 💳 **Razorpay** — Integrating online payments into an e-commerce application.
+* 🧩 **GROQ** — Querying and working with content stored in Sanity.
+* 📱 **Responsive Design** — Creating interfaces that work across desktop, tablet, and mobile devices.
+
+### 🛠️ From Learning to Building
+
+Instead of only learning the concepts theoretically, I applied them by building this **Royal Electronics Store**.
+
+The project helped me understand how different technologies work together in a real-world application:
+
+```text
+Learning
+   ↓
+Next.js
+   ↓
+Authentication with Clerk
+   ↓
+Content Management with Sanity.io
+   ↓
+UI with Shadcn/ui
+   ↓
+Data Queries with GROQ
+   ↓
+Payment Integration with Razorpay
+   ↓
+Deployment with Vercel
+   ↓
+🚀 Complete E-Commerce Application
+```
+
+### 🎓 About the Programme
+
+The **Ujjwalit Development Programme Summer Internship** gave me an opportunity to move from learning individual technologies to understanding how they can be combined to create a complete web application.
+
+The regular classes, practical implementation, and guidance from **Daksh Sir** helped me build a stronger foundation in modern full-stack web development.
+
+> **This project represents not just an application I built, but the progress I made while learning and experimenting with modern web technologies.**
+
+### 🙏 Acknowledgement
+
+A special thanks to **Daksh Sir** and the **Ujjwalit Development Programme** for the guidance, lessons, and learning experience throughout the internship.
+
+**Thank you for being a part of my development journey.** 🚀
+
+
 <div align="center">
 
 **Built for UDP Web Development Batch 2026**
